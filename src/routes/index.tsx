@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useStore, STREAK_THRESHOLD } from "@/lib/store";
 import { deckMastery } from "@/lib/storage";
-import { Plus, Sparkles, Trash2, Flame, Zap } from "lucide-react";
+import { Plus, Sparkles, Trash2, Flame, Zap, Pencil } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -63,19 +63,29 @@ function Home() {
                     <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">
                       {mastery}% mastered
                     </span>
-                    <button
-                      onClick={() =>
-                        isConfirming ? (deleteDeck(d.id), setConfirmId(null)) : setConfirmId(d.id)
-                      }
-                      onBlur={() => setConfirmId(null)}
-                      className={`text-[10px] uppercase tracking-wider font-semibold flex items-center gap-1 transition ${
-                        isConfirming ? "text-brand" : "text-muted-foreground hover:text-foreground"
-                      }`}
-                      aria-label={isConfirming ? "Confirm delete" : "Delete deck"}
-                    >
-                      <Trash2 className="w-3 h-3" />
-                      {isConfirming ? "tap again" : "delete"}
-                    </button>
+                    <div className="flex items-center gap-3">
+                      <Link
+                        to="/deck/$deckId/edit"
+                        params={{ deckId: d.id }}
+                        className="text-[10px] uppercase tracking-wider font-semibold flex items-center gap-1 text-muted-foreground hover:text-foreground transition"
+                        aria-label="Edit deck"
+                      >
+                        <Pencil className="w-3 h-3" /> edit
+                      </Link>
+                      <button
+                        onClick={() =>
+                          isConfirming ? (deleteDeck(d.id), setConfirmId(null)) : setConfirmId(d.id)
+                        }
+                        onBlur={() => setConfirmId(null)}
+                        className={`text-[10px] uppercase tracking-wider font-semibold flex items-center gap-1 transition ${
+                          isConfirming ? "text-brand" : "text-muted-foreground hover:text-foreground"
+                        }`}
+                        aria-label={isConfirming ? "Confirm delete" : "Delete deck"}
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        {isConfirming ? "tap again" : "delete"}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

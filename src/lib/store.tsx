@@ -13,6 +13,10 @@ type Ctx = {
   deleteDeck: (id: string) => void;
   getDeck: (id: string) => Deck | undefined;
   markCorrect: (deckId: string, cardId: string) => void;
+  renameDeck: (deckId: string, name: string) => void;
+  addCard: (deckId: string, card: { front: string; back: string }) => void;
+  updateCard: (deckId: string, cardId: string, patch: { front?: string; back?: string }) => void;
+  deleteCard: (deckId: string, cardId: string) => void;
 };
 
 const StoreCtx = createContext<Ctx | null>(null);
@@ -77,6 +81,36 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     persist(next);
   }, []);
 
+  const renameDeck = useCallback((deckId: string, name: string) => {
+    const next = loadDecks().map((d) => (d.id === deckId ? { ...d, name } : d));
+    persist(next);
+  }, []);
+
+  const addCard = useCallback((deckId: string, card: { front: string; back: string }) => {
+    const next = loadDecks().map((d) =>
+      d.id === deckId
+        ? { ...d, cards: [...d.cards, { id: uid(), front: card.front, back: card.back, correctOnce: false }] }
+        : d
+    );
+    persist(next);
+  }, []);
+
+  const updateCard = useCallback((deckId: string, cardId: string, patch: { front?: string; back?: string }) => {
+    const next = loadDecks().map((d) =>
+      d.id === deckId
+        ? { ...d, cards: d.cards.map((c) => (c.id === cardId ? { ...c, ...patch } : c)) }
+        : d
+    );
+    persist(next);
+  }, []);
+
+  const deleteCard = useCallback((deckId: string, cardId: string) => {
+    const next = loadDecks().map((d) =>
+      d.id === deckId ? { ...d, cards: d.cards.filter((c) => c.id !== cardId) } : d
+    );
+    persist(next);
+  }, []);
+
   const addReelSeconds = useCallback((n: number) => {
     setReelBankState((b) => {
       const next = Math.max(0, b + n);
@@ -104,7 +138,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   return (
     <StoreCtx.Provider
-      value={{ decks, reelBank, streak, bumpStreak, resetStreak, addReelSeconds, setReelBank, createDeck, deleteDeck, getDeck, markCorrect }}
+      value={{ decks, reelBank, streak, bumpStreak, resetStreak, addReelSeconds, setReelBank, createDeck, deleteDeck, getDeck, markCorrect, renameDeck, addCard, updateCard, deleteCard }}
     >
       {children}
     </StoreCtx.Provider>
