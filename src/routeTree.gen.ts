@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ReelsRouteImport } from './routes/reels'
 import { Route as NewRouteImport } from './routes/new'
 import { Route as ImportRouteImport } from './routes/import'
+import { Route as BankRouteImport } from './routes/bank'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudyDeckIdRouteImport } from './routes/study.$deckId'
 
@@ -30,6 +31,11 @@ const ImportRoute = ImportRouteImport.update({
   path: '/import',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BankRoute = BankRouteImport.update({
+  id: '/bank',
+  path: '/bank',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -43,6 +49,7 @@ const StudyDeckIdRoute = StudyDeckIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bank': typeof BankRoute
   '/import': typeof ImportRoute
   '/new': typeof NewRoute
   '/reels': typeof ReelsRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bank': typeof BankRoute
   '/import': typeof ImportRoute
   '/new': typeof NewRoute
   '/reels': typeof ReelsRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bank': typeof BankRoute
   '/import': typeof ImportRoute
   '/new': typeof NewRoute
   '/reels': typeof ReelsRoute
@@ -65,14 +74,22 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/import' | '/new' | '/reels' | '/study/$deckId'
+  fullPaths: '/' | '/bank' | '/import' | '/new' | '/reels' | '/study/$deckId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/import' | '/new' | '/reels' | '/study/$deckId'
-  id: '__root__' | '/' | '/import' | '/new' | '/reels' | '/study/$deckId'
+  to: '/' | '/bank' | '/import' | '/new' | '/reels' | '/study/$deckId'
+  id:
+    | '__root__'
+    | '/'
+    | '/bank'
+    | '/import'
+    | '/new'
+    | '/reels'
+    | '/study/$deckId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BankRoute: typeof BankRoute
   ImportRoute: typeof ImportRoute
   NewRoute: typeof NewRoute
   ReelsRoute: typeof ReelsRoute
@@ -102,6 +119,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ImportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bank': {
+      id: '/bank'
+      path: '/bank'
+      fullPath: '/bank'
+      preLoaderRoute: typeof BankRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -121,6 +145,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BankRoute: BankRoute,
   ImportRoute: ImportRoute,
   NewRoute: NewRoute,
   ReelsRoute: ReelsRoute,

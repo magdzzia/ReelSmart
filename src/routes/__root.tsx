@@ -1,5 +1,6 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { StoreProvider } from "@/lib/store";
+import { FooterNav } from "@/components/FooterNav.tsx";
 
 import appCss from "../styles.css?url";
 
@@ -73,6 +74,7 @@ function RootComponent() {
   return (
     <StoreProvider>
       <Outlet />
+      <FooterNav />
     </StoreProvider>
   );
 }

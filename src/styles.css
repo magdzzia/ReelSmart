@@ -2,6 +2,8 @@
 @source "../src";
 @import "tw-animate-css";
 
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -30,62 +32,43 @@
   --color-ring: var(--ring);
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
+  --color-orange: var(--orange);
+  --color-orange-foreground: var(--orange-foreground);
   --color-ink: var(--ink);
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Night mode is the default — vivid blue accent on near-black */
+/* Dark-only aesthetic — near-black background, lime accent */
 :root {
-  --radius: 0.75rem;
-  --background: oklch(0.16 0 0);              /* near-black */
-  --foreground: oklch(0.98 0 0);              /* white */
-  --ink: oklch(0.98 0 0);
-  --card: oklch(0.20 0 0);
-  --card-foreground: oklch(0.98 0 0);
-  --popover: oklch(0.20 0 0);
-  --popover-foreground: oklch(0.98 0 0);
-  --primary: oklch(0.98 0 0);
-  --primary-foreground: oklch(0.16 0 0);
-  --secondary: oklch(0.22 0 0);
-  --secondary-foreground: oklch(0.98 0 0);
-  --muted: oklch(0.27 0 0);
-  --muted-foreground: oklch(0.72 0 0);
-  --accent: oklch(0.62 0.22 256);             /* vivid blue #2563EB-ish */
-  --accent-foreground: oklch(1 0 0);
-  --brand: oklch(0.62 0.22 256);              /* blue */
-  --brand-foreground: oklch(1 0 0);
+  --radius: 0.875rem;
+  --background: oklch(0.18 0.005 270);          /* near-black, slightly cool */
+  --foreground: oklch(0.97 0 0);
+  --ink: oklch(0.97 0 0);
+  --card: oklch(0.21 0.005 270);                /* card surface */
+  --card-foreground: oklch(0.97 0 0);
+  --popover: oklch(0.21 0.005 270);
+  --popover-foreground: oklch(0.97 0 0);
+  --primary: oklch(0.92 0.20 125);              /* lime / chartreuse */
+  --primary-foreground: oklch(0.18 0 0);
+  --secondary: oklch(0.24 0.005 270);
+  --secondary-foreground: oklch(0.97 0 0);
+  --muted: oklch(0.27 0.005 270);
+  --muted-foreground: oklch(0.68 0.01 270);
+  --accent: oklch(0.92 0.20 125);
+  --accent-foreground: oklch(0.18 0 0);
+  --brand: oklch(0.92 0.20 125);                /* LIME accent #D6FF3D-ish */
+  --brand-foreground: oklch(0.18 0 0);
+  --orange: oklch(0.72 0.21 35);                /* reel-bank orange */
+  --orange-foreground: oklch(0.18 0 0);
   --destructive: oklch(0.62 0.22 25);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.98 0 0);
-  --input: oklch(0.30 0 0);
-  --ring: oklch(0.62 0.22 256);
+  --border: oklch(0.32 0.005 270);
+  --input: oklch(0.30 0.005 270);
+  --ring: oklch(0.92 0.20 125);
 }
 
-/* Light mode opt-in */
-.light {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --ink: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.145 0 0);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(1 0 0);
-  --secondary-foreground: oklch(0.145 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.45 0 0);
-  --accent: oklch(0.55 0.22 256);
-  --accent-foreground: oklch(1 0 0);
-  --brand: oklch(0.55 0.22 256);
-  --brand-foreground: oklch(1 0 0);
-  --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.145 0 0);
-  --input: oklch(0.145 0 0);
-  --ring: oklch(0.55 0.22 256);
-}
+/* keep .light a no-op alias of dark to avoid breakage from any legacy toggle */
+.light { color-scheme: dark; }
 
 @layer base {
   * {
@@ -96,6 +79,10 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.01em;
+  }
+  h1, h2, h3, h4 {
+    letter-spacing: -0.035em;
   }
 }
 
@@ -114,11 +101,11 @@
 .animate-float-up { animation: floatUp 900ms ease-out forwards; }
 
 @keyframes flashBrand {
-  0%,100% { background-color: var(--brand); color: white; border-color: var(--brand); }
+  0%,100% { background-color: var(--brand); color: var(--brand-foreground); border-color: var(--brand); }
 }
 .animate-flash-orange {
   background-color: var(--brand);
-  color: white;
+  color: var(--brand-foreground);
   border-color: var(--brand);
 }
 

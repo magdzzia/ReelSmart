@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useStore, STREAK_THRESHOLD, STREAK_BONUS } from "@/lib/store";
 import type { Card } from "@/lib/storage";
-import { ArrowLeft, Film, RotateCcw, Star, Flame } from "lucide-react";
+import { ArrowLeft, RotateCcw, Zap, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/study/$deckId")({
   component: Study,
@@ -50,7 +50,6 @@ function Study() {
   const [toastKey, setToastKey] = useState(0);
   const [lastGain, setLastGain] = useState(2);
 
-  // initialize
   useEffect(() => {
     if (deck) {
       const o = shuffle(deck.cards);
@@ -68,8 +67,8 @@ function Study() {
     return (
       <div className="min-h-screen flex items-center justify-center px-6 text-center">
         <div>
-          <p className="font-bold text-xl">Deck not found</p>
-          <Link to="/" className="text-brand font-bold underline mt-2 inline-block">Go home</Link>
+          <p className="font-bold text-xl">deck not found</p>
+          <Link to="/" className="text-brand font-bold underline mt-2 inline-block">go home</Link>
         </div>
       </div>
     );
@@ -129,164 +128,143 @@ function Study() {
   if (phase === "done") {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
-        <div className="w-24 h-24 rounded-full bg-brand flex items-center justify-center mb-6">
-          <Star className="w-12 h-12 text-white" fill="white" strokeWidth={2} />
-        </div>
-        <h1 className="text-3xl font-black">Round Complete</h1>
-        <p className="text-muted-foreground mt-2">{deck.name}</p>
+        <div className="max-w-sm w-full">
+          <p className="text-[11px] uppercase tracking-[0.22em] font-semibold text-muted-foreground">
+            round complete
+          </p>
+          <h1 className="text-5xl font-bold tracking-tight mt-2">nice run.</h1>
+          <p className="text-muted-foreground mt-2 text-sm">{deck.name}</p>
 
-        <div className="grid grid-cols-3 gap-3 mt-8 w-full max-w-sm">
-          <Stat label="Correct" value={correct.toString()} />
-          <Stat label="Wrong" value={wrong.toString()} />
-          <Stat label="Earned" value={`${earned}s`} accent />
-        </div>
+          <div className="grid grid-cols-3 gap-3 mt-8">
+            <Stat label="right" value={correct.toString()} />
+            <Stat label="wrong" value={wrong.toString()} />
+            <Stat label="earned" value={`${earned}s`} accent />
+          </div>
 
-        <div className="mt-8 w-full max-w-sm space-y-3">
-          <button
-            onClick={restart}
-            className="w-full border-2 border-foreground rounded-xl py-4 font-bold flex items-center justify-center gap-2 hover:bg-foreground hover:text-background transition min-h-[48px]"
-          >
-            <RotateCcw className="w-5 h-5" /> Study Again
-          </button>
-          <button
-            disabled={reelBank <= 0}
-            onClick={() => navigate({ to: "/reels" })}
-            className="w-full bg-brand text-brand-foreground rounded-xl py-4 font-bold flex items-center justify-center gap-2 hover:opacity-90 transition min-h-[48px] disabled:opacity-30 disabled:cursor-not-allowed"
-          >
-            <Film className="w-5 h-5" /> {reelBank > 0 ? "Watch Reels 🎬" : "No reel seconds yet"}
-          </button>
-          <Link
-            to="/"
-            className="block text-center text-muted-foreground text-sm pt-2 font-medium"
-          >
-            Back to home
-          </Link>
+          <div className="mt-8 space-y-3">
+            <button
+              disabled={reelBank <= 0}
+              onClick={() => navigate({ to: "/bank" })}
+              className="w-full bg-brand text-brand-foreground rounded-full py-4 font-bold flex items-center justify-center gap-2 hover:opacity-90 transition disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              cash in <ArrowRight className="w-4 h-4" />
+            </button>
+            <button
+              onClick={restart}
+              className="w-full border border-border rounded-full py-4 font-semibold flex items-center justify-center gap-2 hover:bg-card transition text-sm"
+            >
+              <RotateCcw className="w-4 h-4" /> study again
+            </button>
+            <Link to="/" className="block text-center text-muted-foreground text-xs pt-2 font-medium">
+              back to decks
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
+  const total = order.length;
+  const onFire = streak > STREAK_THRESHOLD;
+
   return (
-    <div className="min-h-screen pb-28 relative">
-      <header className="px-6 pt-6 pb-4">
-        <div className="flex items-center justify-between gap-3">
-          <Link
-            to="/"
-            className="w-10 h-10 rounded-lg border-2 border-foreground flex items-center justify-center"
-            aria-label="Back"
-          >
-            <ArrowLeft className="w-5 h-5" />
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="max-w-md mx-auto px-6 pt-6">
+        {/* Top status bar — matches mockup: Q 03/10 · DECK · ⚡12s */}
+        <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.18em] font-semibold text-muted-foreground">
+          <Link to="/" aria-label="Back" className="flex items-center gap-1.5 hover:text-foreground">
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>q {String(idx + 1).padStart(2, "0")}/{String(total).padStart(2, "0")}</span>
+            <span>·</span>
+            <span className="truncate max-w-[90px]">{deck.name}</span>
           </Link>
-          <div className="flex items-center gap-2">
-            <StreakChip streak={streak} />
-            <div className="bg-brand text-brand-foreground font-bold px-4 py-2 rounded-full text-sm">
-              🎬 {reelBank}s
-            </div>
-          </div>
+          <span className={`inline-flex items-center gap-1 ${onFire ? "text-brand" : ""}`}>
+            <Zap className="w-3.5 h-3.5" /> {reelBank}s
+          </span>
         </div>
 
-        <div className="mt-5">
-          <div className="flex items-center justify-between mb-2">
-            <h1 className="font-bold truncate">{deck.name}</h1>
-            <span className="text-xs text-muted-foreground font-semibold">
-              Card {idx + 1} of {order.length}
-            </span>
-          </div>
-          <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-            <div
-              className="h-full bg-foreground transition-all duration-300"
-              style={{ width: `${((idx + 1) / order.length) * 100}%` }}
-            />
-          </div>
-        </div>
-      </header>
-
-      <main className="px-6 mt-4">
-        <div className="border-2 border-foreground rounded-2xl p-8 min-h-[200px] flex items-center justify-center text-center">
-          <p className="text-2xl font-bold leading-tight">{card?.front}</p>
+        {/* Progress hairline */}
+        <div className="h-[2px] w-full bg-muted/50 rounded-full overflow-hidden mt-3">
+          <div
+            className="h-full bg-brand transition-all duration-300"
+            style={{ width: `${((idx + 1) / total) * 100}%` }}
+          />
         </div>
 
-        <div className="mt-6 space-y-3 relative">
+        {/* Question */}
+        <div className="mt-10 mb-8 min-h-[140px] relative">
+          <h1 className="text-3xl font-bold tracking-tight leading-[1.15]">
+            {card?.front}
+          </h1>
+
           {toastKey > 0 && (phase === "correct" || phase === "wrong") && (
             <div
               key={toastKey}
-              className={`absolute left-1/2 -top-4 -translate-x-1/2 font-black text-xl pointer-events-none animate-float-up ${
+              className={`absolute right-0 top-0 font-bold text-lg pointer-events-none animate-float-up ${
                 phase === "correct" ? "text-brand" : "text-muted-foreground"
               }`}
+              style={{ left: "auto", transform: "none" }}
             >
               {phase === "correct" ? `+${lastGain}s` : "−1s"}
             </div>
           )}
-          {options.map((opt) => {
+        </div>
+
+        {/* Options A/B/C/D */}
+        <div className="space-y-2.5">
+          {options.map((opt, i) => {
             const isPicked = picked === opt;
             const isCorrect = card && opt === card.back;
-            let cls = "border-2 border-foreground bg-background text-foreground";
-            if (phase === "correct" && isPicked) cls = "animate-flash-orange";
-            else if (phase === "wrong" && isPicked)
-              cls = "bg-foreground text-background border-foreground";
-            else if (phase === "wrong" && isCorrect)
-              cls = "border-brand bg-brand text-brand-foreground";
+            const letter = String.fromCharCode(65 + i);
+
+            let cls = "bg-card border border-border text-foreground hover:border-brand/40";
+            if (phase === "correct" && isPicked) {
+              cls = "bg-brand text-brand-foreground border-brand";
+            } else if (phase === "wrong" && isPicked) {
+              cls = "bg-card border-border text-muted-foreground line-through";
+            } else if (phase === "wrong" && isCorrect) {
+              cls = "bg-brand text-brand-foreground border-brand";
+            } else if (phase !== "answer") {
+              cls = "bg-card border border-border text-muted-foreground";
+            }
 
             return (
               <button
                 key={opt}
                 disabled={phase !== "answer"}
                 onClick={() => pick(opt)}
-                className={`w-full text-left font-semibold px-5 py-4 rounded-xl transition-all duration-200 min-h-[48px] ${cls}`}
+                className={`w-full text-left font-semibold pl-4 pr-5 py-4 rounded-xl transition-all duration-150 min-h-[56px] flex items-center gap-3 ${cls}`}
               >
-                {opt}
+                <span
+                  className={`text-[10px] uppercase tracking-wider font-bold w-4 ${
+                    (phase === "correct" && isPicked) || (phase === "wrong" && isCorrect)
+                      ? "opacity-70"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  {letter}
+                </span>
+                <span className="flex-1">{opt}</span>
               </button>
             );
           })}
         </div>
-      </main>
-
-      {reelBank > 0 && (
-        <button
-          onClick={() => navigate({ to: "/reels" })}
-          className="fixed bottom-6 right-6 bg-brand text-brand-foreground rounded-full shadow-lg px-5 h-14 flex items-center gap-2 font-bold hover:opacity-90 transition"
-        >
-          <Film className="w-5 h-5" /> Watch Reels
-        </button>
-      )}
+      </div>
     </div>
   );
 }
 
 function Stat({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
   return (
-    <div className={`border-2 border-foreground rounded-xl p-4 ${accent ? "bg-brand text-brand-foreground border-brand" : ""}`}>
-      <div className="text-2xl font-black">{value}</div>
-      <div className="text-[10px] uppercase tracking-wider font-bold mt-1 opacity-80">{label}</div>
-    </div>
-  );
-}
-
-function StreakChip({ streak }: { streak: number }) {
-  const onFire = streak > STREAK_THRESHOLD;
-  if (streak === 0) {
-    return (
-      <div className="border-2 border-foreground/30 text-muted-foreground font-bold px-3 py-2 rounded-full text-sm flex items-center gap-1">
-        <Flame className="w-4 h-4" /> 0
+    <div
+      className={`rounded-2xl p-4 ${
+        accent ? "bg-brand text-brand-foreground" : "bg-card border border-border"
+      }`}
+    >
+      <div className="text-2xl font-bold tracking-tight">{value}</div>
+      <div className="text-[10px] uppercase tracking-wider font-semibold mt-1 opacity-80">
+        {label}
       </div>
-    );
-  }
-  if (onFire) {
-    return (
-      <div
-        className="font-black px-3 py-2 rounded-full text-sm flex items-center gap-1 text-white shadow-lg animate-pulse"
-        style={{
-          background: "linear-gradient(135deg, #ff5722, #ff9800, #ffc107)",
-        }}
-        title={`+${STREAK_BONUS}s bonus per correct answer`}
-      >
-        <Flame className="w-4 h-4 fill-white" /> {streak} 🔥
-      </div>
-    );
-  }
-  return (
-    <div className="border-2 border-foreground bg-card font-bold px-3 py-2 rounded-full text-sm flex items-center gap-1">
-      <Flame className="w-4 h-4" /> {streak}
     </div>
   );
 }
