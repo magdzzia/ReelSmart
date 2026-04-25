@@ -65,118 +65,169 @@ function ImportNotes() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-40">
-      <header className="px-6 pt-8 pb-4 flex items-center gap-3">
-        <Link
-          to="/"
-          className="w-10 h-10 rounded-lg border-2 border-foreground flex items-center justify-center hover:bg-foreground hover:text-background transition"
-          aria-label="Back"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </Link>
-        <h1 className="text-2xl font-black flex items-center gap-2">
-          <Sparkles className="w-6 h-6 text-brand" /> Import Notes
-        </h1>
-      </header>
-
-      {!cards ? (
-        <div className="px-6">
-          <p className="text-sm text-muted-foreground mb-3">
-            Paste your notes — AI will turn them into flashcards you can review and edit.
-          </p>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            placeholder="Paste lecture notes, a chapter summary, vocab list..."
-            rows={12}
-            className="w-full border-2 border-foreground rounded-xl px-4 py-3 bg-card outline-none focus:ring-4 focus:ring-brand/30 placeholder:text-muted-foreground/60 resize-none"
-          />
-          {error && <p className="text-brand font-semibold text-sm mt-3">{error}</p>}
-          <button
-            onClick={generate}
-            disabled={loading}
-            className="mt-4 w-full bg-brand text-brand-foreground font-bold py-4 rounded-xl text-lg hover:opacity-90 transition min-h-[48px] flex items-center justify-center gap-2 disabled:opacity-50"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" /> Thinking...
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-5 h-5" /> Generate Flashcards
-              </>
-            )}
-          </button>
-        </div>
-      ) : (
-        <div className="px-6">
-          <label className="block text-xs font-bold uppercase tracking-wider mb-2">
-            Deck name
-          </label>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full text-xl font-bold border-2 border-foreground rounded-xl px-4 py-4 bg-card outline-none focus:ring-4 focus:ring-brand/30"
-          />
-
-          <div className="mt-3 flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">
-              Review {cards.length} {cards.length === 1 ? "card" : "cards"} before submitting.
+    <div className="min-h-screen bg-background text-foreground pb-40">
+      <div className="max-w-md mx-auto px-6 pt-10">
+        {/* Header */}
+        <header className="flex items-start justify-between gap-4 mb-8">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.18em] font-semibold text-muted-foreground">
+              ai · paste notes
             </p>
-            <button
-              onClick={() => {
-                setCards(null);
-                setName("");
-              }}
-              className="text-xs font-bold underline text-muted-foreground"
-            >
-              Start over
-            </button>
+            <h1 className="text-5xl font-bold tracking-tight leading-none mt-2">
+              import.
+            </h1>
           </div>
+          <Link
+            to="/"
+            className="w-9 h-9 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-brand/40 transition"
+            aria-label="Back"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Link>
+        </header>
 
-          <div className="mt-4 space-y-3">
-            {cards.map((c, i) => (
-              <div key={i} className="border-2 border-foreground rounded-xl p-4 bg-card">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-bold uppercase tracking-wider">
-                    Card {i + 1}
-                  </span>
-                  <button
-                    onClick={() => removeCard(i)}
-                    className="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-foreground hover:text-background transition"
-                    aria-label="Delete card"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+        {!cards ? (
+          <>
+            <div className="bg-card rounded-2xl border border-border px-5 py-4 mb-3">
+              <p className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground mb-2">
+                your notes
+              </p>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="paste lecture notes, a chapter summary, vocab list..."
+                rows={12}
+                className="w-full bg-transparent outline-none text-base placeholder:text-muted-foreground/50 resize-none"
+              />
+            </div>
+
+            {error && (
+              <p className="text-brand font-semibold text-sm mt-3 text-center">
+                {error}
+              </p>
+            )}
+
+            <button
+              onClick={generate}
+              disabled={loading}
+              className="mt-3 w-full rounded-2xl border-2 border-dashed border-brand/60 text-brand hover:bg-brand/5 transition py-5 text-center font-semibold tracking-tight disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" /> thinking...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4" /> generate flashcards
+                </>
+              )}
+            </button>
+
+            <p className="text-center text-[11px] text-muted-foreground/60 mt-10 tracking-wider">
+              ai builds it · review before saving
+            </p>
+          </>
+        ) : (
+          <>
+            {/* Deck name card */}
+            <div className="bg-card rounded-2xl border border-border px-5 py-4 mb-3">
+              <p className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground mb-2">
+                deck name
+              </p>
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full text-lg font-semibold tracking-tight bg-transparent outline-none placeholder:text-muted-foreground/50"
+              />
+            </div>
+
+            <div className="flex items-center justify-between mb-3 px-1">
+              <p className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">
+                {cards.length} {cards.length === 1 ? "card" : "cards"} · review
+              </p>
+              <button
+                onClick={() => {
+                  setCards(null);
+                  setName("");
+                }}
+                className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground hover:text-brand transition"
+              >
+                start over
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {cards.map((c, i) => (
+                <div
+                  key={i}
+                  className="bg-card rounded-2xl border border-border overflow-hidden"
+                >
+                  <div className="px-5 pt-4 pb-3">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">
+                        card {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <button
+                        onClick={() => removeCard(i)}
+                        className="text-[10px] uppercase tracking-wider font-semibold flex items-center gap-1 text-muted-foreground hover:text-brand transition"
+                        aria-label="Delete card"
+                      >
+                        <Trash2 className="w-3 h-3" /> remove
+                      </button>
+                    </div>
+                    <input
+                      value={c.front}
+                      onChange={(e) => updateCard(i, "front", e.target.value)}
+                      placeholder="front — question"
+                      className="w-full text-base font-semibold tracking-tight bg-transparent outline-none placeholder:text-muted-foreground/50 mb-2"
+                    />
+                    <input
+                      value={c.back}
+                      onChange={(e) => updateCard(i, "back", e.target.value)}
+                      placeholder="back — answer"
+                      className="w-full text-sm bg-transparent outline-none text-muted-foreground placeholder:text-muted-foreground/50"
+                    />
+                  </div>
+                  <div className="px-5 pb-4">
+                    <div className="h-[3px] w-full bg-muted/60 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-brand transition-all duration-300"
+                        style={{
+                          width: `${
+                            (c.front.trim() ? 50 : 0) + (c.back.trim() ? 50 : 0)
+                          }%`,
+                        }}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <input
-                  value={c.front}
-                  onChange={(e) => updateCard(i, "front", e.target.value)}
-                  placeholder="Front"
-                  className="w-full font-semibold border-b-2 border-foreground/20 focus:border-brand pb-2 mb-3 outline-none bg-transparent"
-                />
-                <input
-                  value={c.back}
-                  onChange={(e) => updateCard(i, "back", e.target.value)}
-                  placeholder="Back"
-                  className="w-full border-b-2 border-foreground/20 focus:border-brand pb-2 outline-none bg-transparent"
-                />
+              ))}
+            </div>
+
+            {error && (
+              <p className="text-brand font-semibold text-sm mt-4 text-center">
+                {error}
+              </p>
+            )}
+
+            <p className="text-center text-[11px] text-muted-foreground/60 mt-10 tracking-wider">
+              minimum 2 cards · multiple-choice
+            </p>
+
+            {/* Sticky submit bar */}
+            <div className="fixed left-0 right-0 px-6 pb-4 pt-3 bg-gradient-to-t from-background via-background to-transparent bottom-[calc(6rem+env(safe-area-inset-bottom))]">
+              <div className="max-w-md mx-auto">
+                <button
+                  onClick={submit}
+                  className="w-full bg-brand text-brand-foreground font-bold tracking-tight py-4 rounded-2xl text-base hover:opacity-90 transition"
+                >
+                  submit deck
+                </button>
               </div>
-            ))}
-          </div>
-
-          {error && <p className="text-brand font-semibold text-sm mt-4 text-center">{error}</p>}
-
-          <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t-2 border-foreground">
-            <button
-              onClick={submit}
-              className="w-full bg-brand text-brand-foreground font-bold py-4 rounded-xl text-lg hover:opacity-90 transition min-h-[48px]"
-            >
-              Submit Deck
-            </button>
-          </div>
-        </div>
-      )}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
