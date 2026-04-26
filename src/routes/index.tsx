@@ -25,7 +25,16 @@ function Home() {
               build it.
             </h1>
           </div>
-          <StreakChip streak={streak} />
+
+          {/* Right side: streak + logo stacked */}
+          <div className="flex flex-col items-end gap-2">
+            <StreakChip streak={streak} />
+            <img
+              src="/logo.png"
+              alt="ReelSmart"
+              className="h-6 w-auto opacity-70"
+            />
+          </div>
         </header>
 
         {/* Deck list */}
