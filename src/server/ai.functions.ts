@@ -10,7 +10,7 @@ type Card = { front: string; back: string };
 export const generateCardsFromNotes = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data }): Promise<{ name: string; cards: Card[]; error: string | null }> => {
-    const GEMINI_API_KEY = process.env.GEMINI_API_KEY ?? import.meta.env.GEMINI_API_KEY;
+    const GEMINI_API_KEY = "AIzaSyDWiOaebBp0uqCmgUYi0uzDftdYemFXykY";
     if (!GEMINI_API_KEY) {
       return { name: "", cards: [], error: "AI is not configured." };
     }
