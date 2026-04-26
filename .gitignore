@@ -18,6 +18,8 @@ dist-ssr
 .dev.vars
 .env
 
+src/server/ai.functions.ts
+
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars

@@ -10,7 +10,7 @@ type Card = { front: string; back: string };
 export const generateCardsFromNotes = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data }): Promise<{ name: string; cards: Card[]; error: string | null }> => {
-    const API_KEY = "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";
+    const API_KEY = "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";
 
     const prompt = `You convert study notes into concise flashcards.
 
