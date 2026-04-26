@@ -1,5 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { OPENROUTER_KEY } from "./secret";
+const API_KEY = OPENROUTER_KEY;
 
 const InputSchema = z.object({
   notes: z.string().min(20).max(20000),
@@ -10,7 +12,7 @@ type Card = { front: string; back: string };
 export const generateCardsFromNotes = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data }): Promise<{ name: string; cards: Card[]; error: string | null }> => {
-    const API_KEY = "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";
+
 
     const prompt = `You convert study notes into concise flashcards.
 
