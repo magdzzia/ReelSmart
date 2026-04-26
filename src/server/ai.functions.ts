@@ -10,7 +10,7 @@ type Card = { front: string; back: string };
 export const generateCardsFromNotes = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data }): Promise<{ name: string; cards: Card[]; error: string | null }> => {
-    const API_KEY = "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";
+    const API_KEY = "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";
 
     const prompt = `You convert study notes into concise flashcards.
 
@@ -50,10 +50,10 @@ ${data.notes}`;
         return { name: "", cards: [], error: "Rate limit hit. Please wait a moment and try again." };
       }
       if (!response.ok) {
-        const txt = await response.text();
-        console.error("Anthropic error:", response.status, txt);
-        return { name: "", cards: [], error: `AI request failed (${response.status}).` };
-      }
+  const txt = await response.text();
+  console.error("Anthropic error:", response.status, txt);
+  return { name: "", cards: [], error: txt }; // ← return actual error
+}
 
       const json = await response.json();
       const rawText = json?.content?.[0]?.text;
